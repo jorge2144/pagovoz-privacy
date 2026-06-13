@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Política de Privacidad — PagoVoz</title>
+  <meta name="description" content="Política de privacidad de PagoVoz, app Android para anunciar pagos por voz en el dispositivo del comerciante.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main>
+    <header>
+      <h1>Política de Privacidad de PagoVoz</h1>
+      <p class="meta">
+        <strong>Última actualización:</strong> 13 de junio de 2026<br>
+        <strong>Versión de la app a la que aplica:</strong> 0.3.0 y posteriores
+      </p>
+    </header>
+
+    <section id="quien-publica">
+      <h2>1. Quién publica esta app</h2>
+      <p>
+        PagoVoz («la app», «PagoVoz», «nosotros») es una aplicación Android para comerciantes
+        peruanos que escucha las notificaciones de billeteras de pago instaladas en el mismo
+        dispositivo y las anuncia por voz a través del parlante del celular, para que el dueño
+        del puesto pueda confirmar pagos sin mirar la pantalla.
+      </p>
+      <ul>
+        <li>
+          <strong>Responsable del tratamiento de datos:</strong> YarPay Labs —
+          <a href="mailto:yarpaylabsapps@gmail.com">yarpaylabsapps@gmail.com</a>
+        </li>
+        <li>
+          <strong>Correo de contacto para privacidad y derechos del usuario:</strong>
+          <a href="mailto:soporteyarpaylabs@gmail.com">soporteyarpaylabs@gmail.com</a>
+        </li>
+        <li>
+          <strong>Marco legal aplicable:</strong> Ley N° 29733 — <em>Ley de Protección de Datos
+          Personales del Perú</em> y su reglamento (D.S. N° 003-2013-JUS), además de las políticas
+          de Google Play sobre permisos sensibles.
+        </li>
+      </ul>
+      <p>
+        PagoVoz no está afiliada, patrocinada ni respaldada por BCP ni por Yape. Yape y BCP son
+        marcas de sus respectivos titulares; PagoVoz solo interpreta localmente las notificaciones
+        que el usuario ya recibe en su propio dispositivo.
+      </p>
+    </section>
+
+    <section id="informacion">
+      <h2>2. Qué información maneja PagoVoz</h2>
+      <p>
+        Para anunciar tus pagos, PagoVoz lee el contenido de las notificaciones que ya muestra tu
+        billetera (por ejemplo, Yape) en la barra del sistema. De esas notificaciones extraemos
+        exclusivamente:
+      </p>
+      <ul>
+        <li>El <strong>monto del pago</strong> (en soles).</li>
+        <li>El <strong>nombre del remitente</strong> tal como lo muestra la billetera.</li>
+        <li>El <strong>código de seguridad</strong> o referencia de operación, si la notificación lo incluye.</li>
+        <li>La <strong>hora del pago</strong> (timestamp de la notificación).</li>
+      </ul>
+      <p>
+        PagoVoz <strong>no lee</strong> mensajes de WhatsApp, SMS, correos, contactos, fotos,
+        ubicación, micrófono, ni notificaciones de aplicaciones distintas a las billeteras de pago
+        configuradas (la lista actual está en el archivo <code>parsers_config.json</code>
+        empaquetado con la app y, en la versión 0.3.0, contiene únicamente Yape BCP).
+      </p>
+    </section>
+
+    <section id="procesamiento">
+      <h2>3. Cómo y dónde se procesa esa información</h2>
+      <blockquote>
+        <p>
+          <strong>PagoVoz no transmite directamente tus pagos, nombres ni montos a servidores
+          propios o de terceros.</strong>
+          La única excepción técnica posible es el motor de Texto-a-Voz del sistema, descrito en
+          la sección 7.
+        </p>
+      </blockquote>
+      <p>Concretamente:</p>
+      <ol>
+        <li>
+          Cuando llega una notificación de Yape, el servicio de escucha de notificaciones
+          (<code>PagoListenerService</code>) extrae los campos descritos arriba aplicando
+          expresiones regulares en español.
+        </li>
+        <li>
+          El motor de Texto-a-Voz (Google Text-to-Speech u otro motor instalado en Android)
+          sintetiza el anuncio de voz. PagoVoz prioriza voces <em>offline</em> reportadas por el
+          motor y la app no tiene permiso de Internet.
+        </li>
+        <li>
+          Una copia del pago (monto, nombre, código, hora) se guarda en una base de datos SQLite
+          (Room) <strong>interna a la app</strong>, accesible únicamente por PagoVoz, para
+          mostrarte el historial del día y los totales.
+        </li>
+        <li>
+          Esta base de datos está <strong>excluida de las copias de seguridad automáticas en la
+          nube de Google</strong> (ver <code>backup_rules.xml</code> y
+          <code>data_extraction_rules.xml</code> del proyecto). Si cambias de celular, los pagos no
+          se transfieren.
+        </li>
+      </ol>
+    </section>
+
+    <section id="permiso-notificaciones">
+      <h2>4. Por qué PagoVoz necesita el permiso de «Acceso a notificaciones»</h2>
+      <p>
+        Para leer notificaciones de otras apps, Android exige el permiso especial
+        <code>BIND_NOTIFICATION_LISTENER_SERVICE</code>, que el usuario debe activar manualmente en
+        <em>Ajustes → Acceso a notificaciones</em>.
+      </p>
+      <p>
+        Este permiso es <strong>esencial para la función única de PagoVoz</strong>: si no podemos
+        leer la notificación de Yape, no podemos anunciarla. El permiso se usa exclusivamente para:
+      </p>
+      <ul>
+        <li>Detectar la llegada de una notificación con el <code>package</code> de una billetera configurada.</li>
+        <li>Extraer los campos descritos en la sección 2.</li>
+      </ul>
+      <p>
+        PagoVoz <strong>no descarta, modifica ni interactúa</strong> con las notificaciones de
+        otras apps. No accede al contenido de notificaciones que no provienen de las billeteras
+        configuradas — esas notificaciones son ignoradas.
+      </p>
+    </section>
+
+    <section id="servicio-primer-plano">
+      <h2>5. Por qué PagoVoz usa un servicio en primer plano de tipo «Media playback»</h2>
+      <p>
+        Android exige declarar el tipo de servicio en primer plano que usamos. PagoVoz declara
+        <code>mediaPlayback</code> porque:
+      </p>
+      <ul>
+        <li>
+          El servicio mantiene activa una <code>MediaSession</code> y solicita foco de audio
+          (<code>AudioFocus</code>) cada vez que va a reproducir un anuncio por TTS.
+        </li>
+        <li>
+          Esto evita que ciertos sistemas (ColorOS, MIUI, EMUI) suspendan el proceso de la app y
+          los anuncios lleguen tarde.
+        </li>
+        <li>
+          No reproducimos música ni contenido externo: el único audio que generamos es la voz que
+          anuncia tus pagos.
+        </li>
+      </ul>
+    </section>
+
+    <section id="no-recolectamos">
+      <h2>6. Datos que NO recolectamos</h2>
+      <p>PagoVoz no recolecta, no transmite y no comparte:</p>
+      <ul>
+        <li>Identificadores publicitarios o <code>Advertising ID</code>.</li>
+        <li>Identificadores únicos del dispositivo (IMEI, IMSI, MAC).</li>
+        <li>Ubicación.</li>
+        <li>Lista de contactos.</li>
+        <li>Historial de navegación.</li>
+        <li>SMS, MMS, llamadas.</li>
+        <li>Datos biométricos.</li>
+      </ul>
+      <p>
+        PagoVoz <strong>no integra SDKs de analítica, atribución, publicidad ni
+        crash-reporting</strong>. No usamos Firebase Analytics, Crashlytics, Google Ads, AppsFlyer,
+        Adjust, Branch, Facebook SDK ni similares. La app no realiza llamadas de red en su versión
+        actual.
+      </p>
+    </section>
+
+    <section id="terceros">
+      <h2>7. Compartido con terceros</h2>
+      <p>
+        <strong>PagoVoz no comparte datos con servidores propios ni con SDKs de terceros.</strong>
+        La app no tiene permiso de Internet y no integra analítica, publicidad ni
+        crash-reporting.
+      </p>
+      <p>
+        La única excepción técnica es el motor de Texto-a-Voz instalado en tu Android: PagoVoz le
+        entrega el texto a sintetizar para que produzca el audio. La app prioriza voces
+        <em>offline</em> y no tiene permiso de Internet. Sin embargo, si el usuario cambia
+        manualmente la voz por una que requiere internet desde Ajustes del Sistema → Texto a voz, o
+        si el motor del sistema no ofrece voces offline y decide usar procesamiento en red,
+        entonces el texto del anuncio podría ser procesado por el proveedor del motor TTS bajo
+        <em>su</em> política de privacidad (no la nuestra).
+      </p>
+    </section>
+
+    <section id="retencion">
+      <h2>8. Retención y eliminación de datos</h2>
+      <ul>
+        <li>
+          <strong>Retención local:</strong> los pagos se guardan en la app indefinidamente para el
+          historial. Dentro de la app, en Historial, puedes borrar el historial local.
+        </li>
+        <li>
+          <strong>Eliminación total:</strong> desinstalar PagoVoz desde tu Android elimina la base
+          de datos local completa. No queda ninguna copia en nuestros servidores porque no tenemos
+          servidores.
+        </li>
+        <li>No tenemos forma de recuperar tus pagos después de desinstalar.</li>
+      </ul>
+    </section>
+
+    <section id="derechos">
+      <h2>9. Tus derechos bajo la Ley 29733 del Perú</h2>
+      <p>Como titular de los datos, puedes ejercer en cualquier momento los siguientes derechos:</p>
+      <ul>
+        <li>
+          <strong>Acceso:</strong> ver qué datos hemos recolectado sobre ti. Como todo se guarda
+          localmente en tu propio dispositivo, abrir la pantalla de Historial dentro de PagoVoz
+          cumple este derecho.
+        </li>
+        <li>
+          <strong>Rectificación:</strong> PagoVoz no permite editar pagos individuales (refleja
+          exactamente lo que la billetera notifica). Si crees que un pago se registró mal, puedes
+          vaciar el historial en Opciones.
+        </li>
+        <li>
+          <strong>Cancelación / supresión:</strong> desinstala la app o usa «Borrar historial» en
+          Historial.
+        </li>
+        <li>
+          <strong>Oposición al tratamiento:</strong> desinstala la app o desactiva el permiso
+          «Acceso a notificaciones» en Ajustes del sistema.
+        </li>
+      </ul>
+      <p>
+        Para cualquier consulta adicional puedes escribirnos a
+        <a href="mailto:soporteyarpaylabs@gmail.com">soporteyarpaylabs@gmail.com</a>.
+      </p>
+    </section>
+
+    <section id="menores">
+      <h2>10. Privacidad de menores</h2>
+      <p>
+        PagoVoz está diseñada para mayores de 18 años que reciben pagos por una actividad comercial.
+        No la promocionamos a menores y no recolectamos a sabiendas datos de menores.
+      </p>
+    </section>
+
+    <section id="seguridad">
+      <h2>11. Seguridad</h2>
+      <ul>
+        <li>
+          Toda la información se guarda en el directorio privado de la app
+          (<code>/data/data/com.pagovoz.app/</code>), accesible únicamente por PagoVoz y por el
+          usuario con permisos de administrador del sistema.
+        </li>
+        <li>
+          En la versión release (la que distribuimos por Google Play) no se generan registros
+          (<code>logs</code>) que contengan nombres ni montos.
+        </li>
+        <li>
+          La app no acepta entradas externas que abran al usuario a inyección de código u otras
+          vulnerabilidades comunes — el flujo es de un solo sentido: notificación entrante → parser
+          local → audio.
+        </li>
+      </ul>
+    </section>
+
+    <section id="cambios">
+      <h2>12. Cambios a esta política</h2>
+      <p>
+        Si actualizamos esta política, cambiaremos la fecha en la cabecera de este documento y, en
+        el caso de cambios sustanciales que afecten al usuario, lo informaremos en la propia app
+        dentro de la primera versión que incorpore el cambio.
+      </p>
+    </section>
+
+    <section id="contacto">
+      <h2>13. Contacto</h2>
+      <p>Por cualquier consulta, queja o ejercicio de derechos sobre tus datos:</p>
+      <p>
+        <strong>Email de soporte:</strong>
+        <a href="mailto:soporteyarpaylabs@gmail.com">soporteyarpaylabs@gmail.com</a><br>
+        <strong>Contacto principal del desarrollador:</strong>
+        <a href="mailto:yarpaylabsapps@gmail.com">yarpaylabsapps@gmail.com</a><br>
+        <strong>Tiempo estimado de respuesta:</strong> hasta 5 días hábiles.
+      </p>
+    </section>
+
+    <footer>
+      <p>
+        Documento mantenido en el repositorio del proyecto PagoVoz. La versión canónica es la
+        publicada en este URL público; la copia incluida dentro de la app es informativa.
+      </p>
+    </footer>
+  </main>
+</body>
+</html>
