@@ -12,7 +12,7 @@
     <header>
       <h1>Política de Privacidad de PagoVoz</h1>
       <p class="meta">
-        <strong>Última actualización:</strong> 13 de junio de 2026<br>
+        <strong>Última actualización:</strong> 17 de junio de 2026<br>
         <strong>Versión de la app a la que aplica:</strong> 0.3.0 y posteriores
       </p>
     </header>
@@ -88,7 +88,7 @@
         <li>
           El motor de Texto-a-Voz (Google Text-to-Speech u otro motor instalado en Android)
           sintetiza el anuncio de voz. PagoVoz prioriza voces <em>offline</em> reportadas por el
-          motor y la app no tiene permiso de Internet.
+          motor y no realiza conexiones de red propias para anunciar tus pagos.
         </li>
         <li>
           Una copia del pago (monto, nombre, código, hora) se guarda en una base de datos SQLite
@@ -163,22 +163,25 @@
       <p>
         PagoVoz <strong>no integra SDKs de analítica, atribución, publicidad ni
         crash-reporting</strong>. No usamos Firebase Analytics, Crashlytics, Google Ads, AppsFlyer,
-        Adjust, Branch, Facebook SDK ni similares. La app no realiza llamadas de red en su versión
-        actual.
+        Adjust, Branch, Facebook SDK ni similares. El propio PagoVoz no realiza llamadas de red para
+        procesar tus pagos; el permiso de Internet que la app declara lo requiere la biblioteca de
+        Google Play (para las compras dentro de la app) y ese tráfico lo gestiona Google, no PagoVoz.
       </p>
     </section>
 
     <section id="terceros">
       <h2>7. Compartido con terceros</h2>
       <p>
-        <strong>PagoVoz no comparte datos con servidores propios ni con SDKs de terceros.</strong>
-        La app no tiene permiso de Internet y no integra analítica, publicidad ni
-        crash-reporting.
+        <strong>PagoVoz no comparte datos de pagos con servidores propios ni con SDKs de analítica,
+        publicidad o crash-reporting.</strong> La app declara el permiso de Internet porque lo
+        requiere <strong>Google Play Billing</strong> (las compras dentro de la app): ese tráfico lo
+        gestiona Google bajo su propia política y no incluye el contenido de tus notificaciones de
+        pago (montos, nombres ni códigos), que se procesan únicamente en tu dispositivo.
       </p>
       <p>
-        La única excepción técnica es el motor de Texto-a-Voz instalado en tu Android: PagoVoz le
+        Una segunda excepción técnica es el motor de Texto-a-Voz instalado en tu Android: PagoVoz le
         entrega el texto a sintetizar para que produzca el audio. La app prioriza voces
-        <em>offline</em> y no tiene permiso de Internet. Sin embargo, si el usuario cambia
+        <em>offline</em>. Sin embargo, si el usuario cambia
         manualmente la voz por una que requiere internet desde Ajustes del Sistema → Texto a voz, o
         si el motor del sistema no ofrece voces offline y decide usar procesamiento en red,
         entonces el texto del anuncio podría ser procesado por el proveedor del motor TTS bajo
